@@ -20,7 +20,8 @@ google.load('visualization', '1', { packages: ['table', 'controls'] });
 </script>
 
 <script type="text/javascript">
-
+ // Once a state is selected, this function displays all possible counties in that state.
+ // In addition to this the function will draw a graph for th state data until a county is selected.
   function setDropDown(state){
     $.get("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv", function(csvString) {
       // transform the CSV string into a 2-dimensional array
@@ -63,7 +64,7 @@ google.load('visualization', '1', { packages: ['table', 'controls'] });
     });
   }
 
-
+//Draws data for santa clara county
   function drawVisualization() {
    $.get("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv", function(csvString) {
       // transform the CSV string into a 2-dimensional array
@@ -209,7 +210,7 @@ chartPie2.draw(dataPie2, optionsPie2);
  }
 
 
-
+//Creates graph for counties
  function makeGraph(county){
    if(county != "All Counties"){
      $.get("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv", function(csvString) {
@@ -317,7 +318,7 @@ chartPie2.draw(dataPie2, optionsPie2);
     });
    }
  }
-
+//creates graphs for countries
  function makeCountry(country){
   $.get("https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv", function(csvString) {
       // transform the CSV string into a 2-dimensional array
