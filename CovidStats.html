@@ -33,10 +33,14 @@ google.load('visualization', '1', { packages: ['table', 'controls'] });
       for (i = length-1; i >= 0; i--) {
         select.options[i] = null;
       }
+      
+      //Add "all counties" to the list of counties
       var opt2 = document.createElement("option");
       opt2.text = "All Counties";
       opt2.value = "All Counties";
       document.getElementById("ListBox2").options.add(opt2);
+      //Go through array data to get the list of counties for this state
+      //removes duplicates
       for(var i = 0; i < arrayData.length; i++) {
         var add = true;
         var data = arrayData[i];
@@ -51,6 +55,7 @@ google.load('visualization', '1', { packages: ['table', 'controls'] });
           }
         }
       }
+      //sort the list of counties and add it to the list box of counties
       array.sort();
       for(var i = 0; i<array.length;i++){
         var opt = document.createElement("option");
@@ -60,6 +65,7 @@ google.load('visualization', '1', { packages: ['table', 'controls'] });
       }
       var e = document.getElementById("ListBox2");
       var strUser = e.options[e.selectedIndex].value;
+     //create graph for this county/state
       makeGraph(strUser);
     });
   }
@@ -216,6 +222,7 @@ chartPie2.draw(dataPie2, optionsPie2);
      $.get("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv", function(csvString) {
      // transform the CSV string into a 2-dimensional array
      var arrayData = $.csv.toArrays(csvString, {onParseValue: $.csv.hooks.castToScalar});
+     //create two new columns
      arrayData[0].push("New Cases");
      arrayData[0].push("New Deaths");
      for(var i = 1; i < arrayData.length; i++) {
@@ -236,11 +243,13 @@ chartPie2.draw(dataPie2, optionsPie2);
      newTable.setCell(0,7,0);
      newTable.setCell(0,0,newTable.getValue(0,0).substring(6));
 
+      //Calculates new cases/deaths
      for(var x = 1; x< newTable.getNumberOfRows(); x++){
        newTable.setCell(x,6,newTable.getValue(x,4) - newTable.getValue(x-1,4));
        newTable.setCell(x,7,newTable.getValue(x,5) - newTable.getValue(x-1,5));
        newTable.setCell(x,0,newTable.getValue(x,0).substring(6));
      }
+      //Draws new graphs for total/new cases and total/new deaths.
      var view2 = new google.visualization.DataView(newTable);
      view2.hideColumns([1,2, 3,5,7]);
      var view3 = new google.visualization.DataView(newTable);
@@ -318,6 +327,10 @@ chartPie2.draw(dataPie2, optionsPie2);
     });
    }
  }
+ 
+ 
+ 
+ 
 //creates graphs for countries
  function makeCountry(country){
   $.get("https://raw.githubusercontent.com/datasets/covid-19/master/data/countries-aggregated.csv", function(csvString) {
@@ -332,6 +345,8 @@ chartPie2.draw(dataPie2, optionsPie2);
         data.setCell(x,0,data.getValue(x,0).substring(6));
       }
       var view = new google.visualization.DataView(data);
+     
+      //Only take data from the country in question.
       view.setRows(view.getFilteredRows([{column: 1, value: country}]));
       var options = {'title':'Covid-19 data by country',
         //'width':900,
